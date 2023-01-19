@@ -5,6 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="closets")
@@ -16,8 +18,18 @@ public class Closet {
     private Long id;
 
     private String name;
-    private Timestamp created_at;
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 
     @OneToOne(mappedBy = "closet", fetch = FetchType.LAZY)
     private User user;
+
+    @OneToMany(mappedBy = "closet", cascade = CascadeType.ALL)
+    private List<Clothes> clothesList = new ArrayList<>();
+
+    // 연관관계 매서드
+    public void addclothes(Clothes clothes) {
+        clothesList.add(clothes);
+        clothes.setCloset(this);
+    }
 }
